@@ -7,8 +7,8 @@ local urlVip = "https://raw.githubusercontent.com/putraborz/VerifikasiScWata/ref
 local urlSatuan = "https://raw.githubusercontent.com/putraborz/VerifikasiScWata/refs/heads/main/Loader/2.txt"
 
 local successUrls = {
-    "https://raw.githubusercontent.com/WataXScript/WataXMountAtin/main/Loader/WataX.lua",
-    "https://raw.githubusercontent.com/WataXScript/WataXMountYahayuk1/refs/heads/main/Loader/mainmap970.lua"
+    "https://raw.githubusercontent.com/putraborz/WataXMountAtin/main/Loader/WataX.lua",
+    "https://raw.githubusercontent.com/putraborz/WataXMountYahayuk1/refs/heads/main/Loader/mainmap970.lua"
 }
 
 
@@ -147,10 +147,10 @@ Instance.new("UICorner", discordBtn).CornerRadius = UDim.new(0, 8)
 local function copyToClipboard(link)
     if setclipboard then
         pcall(setclipboard, link)
-        notify("WataX", "Link disalin ke clipboard", 3)
+        notify("Gaje", "Link disalin ke clipboard", 3)
         return true
     else
-        notify("WataX", "Fitur salin tidak tersedia di executor ini", 4)
+        notify("Gaje", "Fitur salin tidak tersedia di executor ini", 4)
         print("Link (copy manual):", link)
         return false
     end
