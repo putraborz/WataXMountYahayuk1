@@ -1,4 +1,4 @@
-
+-- ⚡ LEX HOST Replay Script (Neon UI Edition)
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -17,11 +17,10 @@ local isMoving = false
 local frameTime = 1/30
 local playbackRate = 1
 local isReplayRunning = false
-local triggeredCP = {} 
+local triggeredCP = {}
 local lastReplayPos = nil
 local lastReplayIndex = 1
-local CP_COOLDOWN = 25 
-
+local CP_COOLDOWN = 25
 
 for i, link in ipairs(ROUTE_LINKS) do
     if link ~= "" then
@@ -29,15 +28,14 @@ for i, link in ipairs(ROUTE_LINKS) do
             return loadstring(game:HttpGet(link))()
         end)
         if ok and typeof(data) == "table" and #data > 0 then
-            table.insert(routes, {"Route "..i, data})
+            table.insert(routes, {"LEX Route "..i, data})
         end
     end
 end
 if #routes == 0 then
-    warn("[WataX] Tidak ada route valid ditemukan.")
+    warn("[LEX HOST] Tidak ada route valid ditemukan.")
     return
 end
-
 
 local function refreshHRP(char)
     if not char then char = player.Character or player.CharacterAdded:Wait() end
@@ -45,7 +43,6 @@ local function refreshHRP(char)
 end
 player.CharacterAdded:Connect(refreshHRP)
 if player.Character then refreshHRP(player.Character) end
-
 
 local function setupMovement(char)
     task.spawn(function()
@@ -55,7 +52,7 @@ local function setupMovement(char)
         if not humanoid or not root then return end
 
         humanoid.Died:Connect(function()
-            print("[WataX] Karakter mati, replay berhenti.")
+            print("[LEX HOST] Karakter mati, replay berhenti.")
             isReplayRunning = false
             stopMovement()
             if toggleBtn and toggleBtn.Parent then
@@ -109,7 +106,6 @@ end
 local function startMovement() isMoving = true end
 local function stopMovement() isMoving = false end
 
-
 local DEFAULT_HEIGHT = 2.9
 local function getCurrentHeight()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -158,7 +154,6 @@ local function getNearestFrameIndex(frames)
     return startIdx
 end
 
-
 local function lerpCF(fromCF,toCF)
     local duration = frameTime / math.max(0.05,playbackRate)
     local startTime = os.clock()
@@ -173,7 +168,6 @@ local function lerpCF(fromCF,toCF)
     end
 end
 
-
 local function walkTo(targetPos)
     local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
     if not humanoid or not hrp then return end
@@ -186,7 +180,6 @@ local function walkTo(targetPos)
         humanoid.MoveToFinished:Wait()
     end
 end
-
 
 local function findNearestCP(radius)
     if not hrp then return nil end
@@ -206,7 +199,6 @@ local function findNearestCP(radius)
     end
     return nearest
 end
-
 
 local function runRoute(startIdx)
     if #routes==0 then return end
@@ -232,7 +224,6 @@ local function stopRoute()
     stopMovement()
 end
 
-
 task.spawn(function()
     while true do
         task.wait(0.3)
@@ -240,7 +231,7 @@ task.spawn(function()
             local cp = findNearestCP(15)
             if cp then
                 triggeredCP[cp] = tick()
-                print("[WataX] CP Terdeteksi, cooldown 25 detik...")
+                print("[LEX HOST] CP Terdeteksi, cooldown 25 detik...")
 
                 isReplayRunning=false
                 stopMovement()
@@ -251,7 +242,7 @@ task.spawn(function()
                     if lastReplayPos then
                         walkTo(lastReplayPos)
                     end
-                    print("[WataX] Lanjutkan replay...")
+                    print("[LEX HOST] Lanjutkan replay...")
                     task.wait(0.2)
                     task.spawn(function()
                         runRoute(lastReplayIndex)
@@ -262,16 +253,16 @@ task.spawn(function()
     end
 end)
 
-
+-- 🌈 UI Section (Neon LEX HOST)
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name="WataXReplayUI"
+screenGui.Name="LEXHostUI"
 screenGui.Parent=game.CoreGui
 
 local frame = Instance.new("Frame")
 frame.Size=UDim2.new(0,220,0,130)
 frame.Position=UDim2.new(0.05,0,0.75,0)
-frame.BackgroundColor3=Color3.fromRGB(50,30,70)
-frame.BackgroundTransparency=0.3
+frame.BackgroundColor3=Color3.fromRGB(30,20,50)
+frame.BackgroundTransparency=0.2
 frame.Active=true
 frame.Draggable=true
 frame.Parent=screenGui
@@ -279,23 +270,23 @@ Instance.new("UICorner",frame).CornerRadius=UDim.new(0,16)
 
 local glow = Instance.new("UIStroke")
 glow.Parent=frame
-glow.Color=Color3.fromRGB(180,120,255)
-glow.Thickness=2
-glow.Transparency=0.4
+glow.Color=Color3.fromRGB(120,60,255)
+glow.Thickness=3
+glow.Transparency=0.3
 
 local title = Instance.new("TextLabel",frame)
 title.Size=UDim2.new(0.75,0,0,28)
 title.Position=UDim2.new(0.05,0,0,4)
-title.Text="WataX Script"
+title.Text="LEX HOST ⚡"
 title.Font=Enum.Font.GothamBold
 title.TextScaled=true
-title.BackgroundTransparency=0.3
-title.BackgroundColor3=Color3.fromRGB(70,40,120)
+title.BackgroundTransparency=0.2
+title.BackgroundColor3=Color3.fromRGB(60,40,100)
 Instance.new("UICorner",title).CornerRadius=UDim.new(0,12)
 
 local hue=0
 RunService.RenderStepped:Connect(function()
-    hue=(hue+0.5)%360
+    hue=(hue+1)%360
     title.TextColor3=Color3.fromHSV(hue/360,1,1)
 end)
 
@@ -339,13 +330,13 @@ local toggleGlow=Instance.new("UIStroke")
 toggleGlow.Parent=toggleBtn
 toggleGlow.Color=Color3.fromRGB(0,255,255)
 toggleGlow.Thickness=2
-toggleGlow.Transparency=0.5
+toggleGlow.Transparency=0.4
 
 toggleBtn.MouseEnter:Connect(function()
     TweenService:Create(toggleGlow,TweenInfo.new(0.2),{Transparency=0.1,Thickness=4}):Play()
 end)
 toggleBtn.MouseLeave:Connect(function()
-    TweenService:Create(toggleGlow,TweenInfo.new(0.2),{Transparency=0.5,Thickness=2}):Play()
+    TweenService:Create(toggleGlow,TweenInfo.new(0.2),{Transparency=0.4,Thickness=2}):Play()
 end)
 
 local isRunning=false
@@ -376,7 +367,7 @@ speedDown.Position = UDim2.new(0.05,0,0.7,0)
 speedDown.Text = "-"
 speedDown.Font = Enum.Font.GothamBold
 speedDown.TextScaled = true
-speedDown.BackgroundColor3 = Color3.fromRGB(100,100,100)
+speedDown.BackgroundColor3 = Color3.fromRGB(80,80,100)
 speedDown.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", speedDown).CornerRadius = UDim.new(0,6)
 speedDown.MouseButton1Click:Connect(function()
@@ -390,7 +381,7 @@ speedUp.Position = UDim2.new(0.75,0,0.7,0)
 speedUp.Text = "+"
 speedUp.Font = Enum.Font.GothamBold
 speedUp.TextScaled = true
-speedUp.BackgroundColor3 = Color3.fromRGB(100,100,150)
+speedUp.BackgroundColor3 = Color3.fromRGB(80,80,130)
 speedUp.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", speedUp).CornerRadius = UDim.new(0,6)
 speedUp.MouseButton1Click:Connect(function()
